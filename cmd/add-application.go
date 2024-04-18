@@ -28,8 +28,9 @@ func NewAddAppCmd() *cobra.Command {
 	var targetRevision string
 
 	cmd := &cobra.Command{
-		Use:   "add-application --apps=<path/to/apps> --repo-url=<url> --target-revision=<revision> --kubeconfig=<path/to/kubeconfig> <name>",
+		Use:   "add-application <name> --apps=<path/to/apps> --repo-url=<url> --target-revision=<revision> --kubeconfig=<path/to/kubeconfig>",
 		Short: "Add an Application or ApplicationSet",
+		Args:  cobra.ExactArgs(1),
 		Run: func(cmd *cobra.Command, args []string) {
 			logger := log.New(cmd.OutOrStdout())
 			logger.SetLevel(log.InfoLevel)
