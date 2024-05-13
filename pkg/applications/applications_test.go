@@ -208,3 +208,116 @@ func TestCreateApplication(t *testing.T) {
 		})
 	})
 }
+
+func TestCreateApplicationSet(t *testing.T) {
+
+	ctx := context.TODO()
+	logger := log.New(os.Stdout)
+	s := scheme.Scheme
+	err := argocdv1alpha1.AddToScheme(s)
+	require.NoError(t, err)
+
+	t.Run("create", func(t *testing.T) {
+		t.Run("success", func(t *testing.T) {
+			// given
+			app := &argocdv1alpha1.ApplicationSet{
+				ObjectMeta: metav1.ObjectMeta{
+					Namespace: "openshift-gitops",
+					Name:      "cookie",
+				},
+			}
+			cl := fake.NewClientBuilder().
+				WithScheme(s).
+				Build()
+			// when
+			err := applications.CreateApplicationSet(ctx, logger, cl, app)
+			// then
+			require.NoError(t, err)
+		})
+
+		t.Run("failure", func(t *testing.T) {
+			// given
+			app := &argocdv1alpha1.ApplicationSet{
+				ObjectMeta: metav1.ObjectMeta{
+					Namespace: "openshift-gitops",
+					Name:      "cookie",
+				},
+			}
+			cl := fake.NewClientBuilder().
+				WithScheme(s).
+				WithInterceptorFuncs(interceptor.Funcs{
+					Create: func(ctx context.Context, cl runtimeclient.WithWatch, obj runtimeclient.Object, opts ...runtimeclient.CreateOption) error {
+						if _, ok := obj.(*argocdv1alpha1.ApplicationSet); ok {
+							return fmt.Errorf("mock error!")
+						}
+						return cl.Create(ctx, obj, opts...)
+					},
+				}).
+				Build()
+			// when
+			err := applications.CreateApplicationSet(ctx, logger, cl, app)
+			// then
+			require.Error(t, err, "mock error!")
+		})
+	})
+
+	t.Run("update", func(t *testing.T) {
+		t.Run("success", func(t *testing.T) {
+			// given
+			app := &argocdv1alpha1.ApplicationSet{
+				ObjectMeta: metav1.ObjectMeta{
+					Namespace: "openshift-gitops",
+					Name:      "cookie",
+				},
+			}
+			existingApp := &argocdv1alpha1.ApplicationSet{
+				ObjectMeta: metav1.ObjectMeta{
+					Namespace:       "openshift-gitops",
+					Name:            "cookie",
+					ResourceVersion: "1",
+				},
+			}
+			cl := fake.NewClientBuilder().
+				WithScheme(s).
+				WithRuntimeObjects(existingApp).
+				Build()
+			// when
+			err := applications.CreateApplicationSet(ctx, logger, cl, app)
+			// then
+			require.NoError(t, err)
+		})
+
+		t.Run("failure", func(t *testing.T) {
+			// given
+			app := &argocdv1alpha1.ApplicationSet{
+				ObjectMeta: metav1.ObjectMeta{
+					Namespace: "openshift-gitops",
+					Name:      "cookie",
+				},
+			}
+			existingApp := &argocdv1alpha1.ApplicationSet{
+				ObjectMeta: metav1.ObjectMeta{
+					Namespace:       "openshift-gitops",
+					Name:            "cookie",
+					ResourceVersion: "1",
+				},
+			}
+			cl := fake.NewClientBuilder().
+				WithScheme(s).
+				WithRuntimeObjects(existingApp).
+				WithInterceptorFuncs(interceptor.Funcs{
+					Update: func(ctx context.Context, cl runtimeclient.WithWatch, obj runtimeclient.Object, opts ...runtimeclient.UpdateOption) error {
+						if _, ok := obj.(*argocdv1alpha1.ApplicationSet); ok {
+							return fmt.Errorf("mock error!")
+						}
+						return cl.Update(ctx, obj, opts...)
+					},
+				}).
+				Build()
+			// when
+			err := applications.CreateApplicationSet(ctx, logger, cl, app)
+			// then
+			require.Error(t, err, "mock error!")
+		})
+	})
+}
