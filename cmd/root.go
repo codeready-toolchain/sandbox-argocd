@@ -28,4 +28,5 @@ func init() {
 	rootCmd.PersistentFlags().BoolP("toggle", "t", false, "Help message for toggle")
 
 	rootCmd.AddCommand(NewAddAppCmd())
+	rootCmd.AddCommand(NewListAppsCmd())
 }
