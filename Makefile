@@ -56,4 +56,5 @@ install-golangci-lint:
 .PHONY: install
 ## build the binary and copy into $(GOPATH)/bin
 install:
-	go install github.com/codeready-toolchain/sandbox-argocd@master
+	# go install github.com/codeready-toolchain/sandbox-argocd@master
+	@go build -o ${GOPATH}/bin/sandbox-argocd main.go 

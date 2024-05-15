@@ -43,7 +43,6 @@ func NewListAppsCmd() *cobra.Command {
 		os.Exit(1)
 	}
 	return cmd
-
 }
 
 func join[T runtimeclient.Object](objs ...T) string {
