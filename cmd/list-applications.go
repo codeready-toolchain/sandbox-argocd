@@ -14,8 +14,8 @@ import (
 )
 
 func NewListAppsCmd() *cobra.Command {
-	var pathToApps string
 
+	var pathToApps string
 	cmd := &cobra.Command{
 		Use:   "list-applications --apps=<path/to/apps>",
 		Short: "List Applications and ApplicationSets in the given 'apps'",
@@ -37,6 +37,7 @@ func NewListAppsCmd() *cobra.Command {
 			return nil
 		},
 	}
+
 	cmd.Flags().StringVarP(&pathToApps, "apps", "a", "", "Path to ArgoCD Application and ApplicationSets")
 	if err := cmd.MarkFlagRequired("apps"); err != nil {
 		fmt.Println(err.Error())

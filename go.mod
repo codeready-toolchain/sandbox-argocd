@@ -24,6 +24,7 @@ require (
 	github.com/Masterminds/semver/v3 v3.2.1 // indirect
 	github.com/Microsoft/go-winio v0.6.1 // indirect
 	github.com/ProtonMail/go-crypto v0.0.0-20230828082145-3c4c8a2d2371 // indirect
+	github.com/agnivade/levenshtein v1.1.1 // indirect
 	github.com/argoproj/gitops-engine v0.7.1-0.20240124052710-5fd9f449e757 // indirect
 	github.com/argoproj/pkg v0.13.7-0.20230626144333-d56162821bd1 // indirect
 	github.com/aymanbagabas/go-osc52/v2 v2.0.1 // indirect

@@ -3,10 +3,12 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"strings"
 
 	"github.com/codeready-toolchain/sandbox-argocd/pkg/applications"
 	"github.com/codeready-toolchain/sandbox-argocd/pkg/client"
 
+	"github.com/agnivade/levenshtein"
 	"github.com/charmbracelet/log"
 	"github.com/spf13/afero"
 	"github.com/spf13/cobra"
@@ -54,7 +56,27 @@ func NewAddAppCmd() *cobra.Command {
 					return applications.CreateApplicationSet(cmd.Context(), logger, cl, appset)
 				}
 			}
-			logger.Warnf("🤷‍♂️ unable to find the '%s' Argo CD Application/ApplicationSet", args[0])
+			logger.Errorf("🤷 unable to find the '%s' Argo CD Application/ApplicationSet", args[0])
+
+			// in this case, suggest the closest apps/appsets
+			suggestions := []string{}
+			threshold := 4
+			for _, app := range apps {
+				if distance := levenshtein.ComputeDistance(args[0], app.Name); distance < threshold {
+					suggestions = append(suggestions, app.Name)
+				}
+			}
+			for _, appset := range appsets {
+				if distance := levenshtein.ComputeDistance(args[0], appset.Name); distance < threshold {
+					suggestions = append(suggestions, appset.Name)
+				}
+			}
+			if len(suggestions) > 0 {
+				logger.Infof("🤔 did you mean: %s", strings.Join(suggestions, ", "))
+			} else {
+				logger.Info("🤨 no similar Application or ApplicationSet")
+			}
+
 			return nil
 		},
 	}
