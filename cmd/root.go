@@ -29,4 +29,5 @@ func init() {
 
 	rootCmd.AddCommand(NewAddAppCmd())
 	rootCmd.AddCommand(NewListAppsCmd())
+	rootCmd.AddCommand(NewVersionCmd())
 }

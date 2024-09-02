@@ -53,8 +53,17 @@ install-golangci-lint:
 # Installing
 # --------------------------------------
 
+GIT_COMMIT_ID_SHORT := $(shell git rev-parse --short HEAD)
+ifneq ($(shell git status --porcelain --untracked-files=no),)
+       GIT_COMMIT_ID_SHORT := $(GIT_COMMIT_ID_SHORT)-dirty
+endif
+
+BUILD_TIME = `date -u '+%Y-%m-%dT%H:%M:%SZ'`
+
+
 .PHONY: install
 ## build the binary and copy into $(GOPATH)/bin
 install:
-	# go install github.com/codeready-toolchain/sandbox-argocd@master
-	@go build -o ${GOPATH}/bin/sandbox-argocd main.go 
+	@go build \
+	-ldflags "-X github.com/codeready-toolchain/sandbox-argocd/cmd.Commit=${GIT_COMMIT_ID_SHORT} -X github.com/codeready-toolchain/sandbox-argocd/cmd.BuildTime=${BUILD_TIME}" \
+	-o ${GOPATH}/bin/sandbox-argocd main.go 
