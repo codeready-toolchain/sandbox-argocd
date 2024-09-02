@@ -5,6 +5,9 @@ on:
     - master
     tags-ignore:
     - '*.*'
+  pull_request:
+    branches:
+      - master
 
 jobs:
   test:
@@ -12,7 +15,7 @@ jobs:
     strategy:
       matrix:
         os: [ ubuntu-latest ]
-    name: Test with coverage
+    name: build and test
 
     steps:
     - name: Checkout code
