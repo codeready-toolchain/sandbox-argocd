@@ -61,9 +61,14 @@ endif
 BUILD_TIME = `date -u '+%Y-%m-%dT%H:%M:%SZ'`
 
 
-.PHONY: install
-## build the binary and copy into $(GOPATH)/bin
-install:
+.PHONY: build
+## build the binary and copy into ./bin
+build:
 	@go build \
 	-ldflags "-X github.com/codeready-toolchain/sandbox-argocd/cmd.Commit=${GIT_COMMIT_ID_SHORT} -X github.com/codeready-toolchain/sandbox-argocd/cmd.BuildTime=${BUILD_TIME}" \
-	-o ${GOPATH}/bin/sandbox-argocd main.go 
+	-o bin/sandbox-argocd main.go 
+
+.PHONY: install
+## build the binary and copy into $(GOPATH)/bin
+install: build
+	@mv bin/sandbox-argocd ${GOPATH}/bin/sandbox-argocd
