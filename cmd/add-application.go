@@ -31,7 +31,7 @@ func NewAddAppCmd() *cobra.Command {
 			}
 			cl, err := client.NewFromConfig(kubeconfig)
 			if err != nil {
-				logger.Errorf(err.Error())
+				logger.Errorf("error occurred: %s", err.Error())
 				os.Exit(1)
 			}
 			afs := afero.Afero{
