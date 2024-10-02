@@ -9,6 +9,7 @@ import (
 var Commit = "undefined"
 var BuildTime = "undefined"
 
+// TODO: use `rootCmd.Version` instead`
 func NewVersionCmd() *cobra.Command {
 	return &cobra.Command{
 		Use:   "version",
